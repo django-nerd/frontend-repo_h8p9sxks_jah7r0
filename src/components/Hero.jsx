@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Spline from '@splinetool/react-spline';
 import { motion } from 'framer-motion';
 import { Waves, PhoneCall, ArrowRight } from 'lucide-react';
@@ -8,36 +8,60 @@ const backendBase =
   `${window.location.protocol}//${window.location.hostname}:8000`;
 
 export default function Hero() {
-  const [canRenderSpline, setCanRenderSpline] = useState(true);
+  const [allow3D, setAllow3D] = useState(false);
+  const [loaded3D, setLoaded3D] = useState(false);
+  const [forceFallback, setForceFallback] = useState(false);
+  const timeoutRef = useRef(null);
 
   useEffect(() => {
-    // Graceful fallback if WebGL is unavailable or user prefers reduced motion
+    // Feature detect WebGL and reduced motion. Default to fallback if in doubt.
+    let canWebGL = false;
     try {
       const canvas = document.createElement('canvas');
       const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-      const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (!gl || prefersReduced) {
-        setCanRenderSpline(false);
-      }
+      canWebGL = !!gl;
     } catch {
-      setCanRenderSpline(false);
+      canWebGL = false;
     }
-  }, []);
+
+    const prefersReduced =
+      typeof window !== 'undefined' &&
+      window.matchMedia &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (canWebGL && !prefersReduced) {
+      setAllow3D(true);
+      // Safety timeout: if the scene doesn't load quickly, switch to fallback to prevent black screen
+      timeoutRef.current = window.setTimeout(() => {
+        if (!loaded3D) setForceFallback(true);
+      }, 3500);
+    } else {
+      setAllow3D(false);
+      setForceFallback(true);
+    }
+
+    return () => {
+      if (timeoutRef.current) window.clearTimeout(timeoutRef.current);
+    };
+  }, [loaded3D]);
+
+  const showSpline = allow3D && !forceFallback;
 
   return (
     <div className="relative min-h-[80vh] md:min-h-[90vh] overflow-hidden bg-gradient-to-b from-slate-900 via-slate-950 to-slate-950">
-      {/* 3D background */}
+      {/* 3D background or graceful fallback */}
       <div className="absolute inset-0">
-        {canRenderSpline ? (
+        {showSpline ? (
           <Spline
             scene="https://prod.spline.design/6il3wWc9lV0eA-6v/scene.splinecode"
             style={{ width: '100%', height: '100%' }}
             onLoad={() => {
-              // no-op: ensures Spline mounted without blocking UI
+              setLoaded3D(true);
+              if (timeoutRef.current) window.clearTimeout(timeoutRef.current);
             }}
           />
         ) : (
-          <div className="h-full w-full bg-[radial-gradient(1000px_600px_at_70%_-10%,rgba(34,211,238,0.25),transparent),radial-gradient(800px_500px_at_20%_120%,rgba(56,189,248,0.18),transparent)]" />
+          <div className="h-full w-full bg-[radial-gradient(900px_500px_at_70%_-10%,rgba(34,211,238,0.25),transparent),radial-gradient(700px_400px_at_20%_120%,rgba(56,189,248,0.18),transparent)]" />
         )}
       </div>
 
