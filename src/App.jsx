@@ -1,50 +1,48 @@
-import Hero from './components/Hero';
-import Services from './components/Services';
-import Projects from './components/Projects';
-import CTA from './components/CTA';
-import { Phone } from 'lucide-react';
+import React from 'react';
+import Hero from './components/Hero.jsx';
+import Services from './components/Services.jsx';
+import Projects from './components/Projects.jsx';
+import CTA from './components/CTA.jsx';
 
 function App() {
   return (
-    <div className="min-h-screen bg-white text-slate-900">
-      <header className="sticky top-0 z-30 w-full border-b border-slate-200 bg-white/70 backdrop-blur">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <a href="#" className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-sky-500 to-cyan-600" />
-            <span className="text-lg font-semibold tracking-tight">kupi‑bassein</span>
+    <div className="min-h-screen bg-slate-950 text-white">
+      {/* Header */}
+      <header className="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-slate-950/60 border-b border-white/10">
+        <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+          <a href="#home" className="flex items-center gap-3">
+            <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-cyan-500/20 text-cyan-300 font-bold">KB</span>
+            <span className="text-lg font-semibold tracking-tight">kupi-bassein</span>
           </a>
-          <nav className="hidden items-center gap-6 md:flex">
-            <a href="#services" className="text-sm text-slate-600 hover:text-slate-900">Услуги</a>
-            <a href="#projects" className="text-sm text-slate-600 hover:text-slate-900">Проекты</a>
-            <a href="#contacts" className="text-sm text-slate-600 hover:text-slate-900">Контакты</a>
+          <nav className="hidden md:flex items-center gap-6 text-sm text-slate-300">
+            <a href="#services" className="hover:text-white transition">Услуги</a>
+            <a href="#projects" className="hover:text-white transition">Проекты</a>
+            <a href="#contact" className="hover:text-white transition">Контакты</a>
           </nav>
-          <a href="tel:+78120000000" className="inline-flex items-center gap-2 rounded-lg bg-sky-600 px-3 py-2 text-sm font-medium text-white shadow hover:bg-sky-700">
-            <Phone className="h-4 w-4" />
-            Позвонить
-          </a>
         </div>
       </header>
 
+      {/* Sections */}
       <main>
-        <Hero />
-        <Services />
-        <Projects />
-        <CTA />
+        <section id="home">
+          <Hero />
+        </section>
+        <section id="services" className="py-20">
+          <Services />
+        </section>
+        <section id="projects" className="py-20">
+          <Projects />
+        </section>
+        <section id="contact" className="py-20">
+          <CTA />
+        </section>
       </main>
 
-      <footer id="contacts" className="border-t border-slate-200 bg-white">
-        <div className="mx-auto max-w-7xl px-6 py-10">
-          <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
-            <div>
-              <p className="text-lg font-semibold">kupi‑bassein</p>
-              <p className="mt-1 text-slate-600">Строительство бассейнов под ключ в Санкт‑Петербурге и ЛО.</p>
-            </div>
-            <div className="text-slate-600">
-              <p>Телефон: <a className="text-sky-700 hover:underline" href="tel:+78120000000">+7 (812) 000‑00‑00</a></p>
-              <p>Email: <a className="text-sky-700 hover:underline" href="mailto:info@kupi-bassein.ru">info@kupi-bassein.ru</a></p>
-            </div>
-          </div>
-          <div className="mt-8 text-sm text-slate-500">© {new Date().getFullYear()} kupi‑bassein. Все права защищены.</div>
+      {/* Footer */}
+      <footer className="border-t border-white/10">
+        <div className="max-w-7xl mx-auto px-4 py-8 text-sm text-slate-400 flex flex-col md:flex-row gap-2 md:gap-0 items-center justify-between">
+          <span>© {new Date().getFullYear()} kupi-bassein. Все права защищены.</span>
+          <span className="text-slate-500">Сделано с любовью к воде.</span>
         </div>
       </footer>
     </div>

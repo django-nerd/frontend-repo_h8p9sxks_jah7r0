@@ -1,99 +1,98 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Ruler, Layers, Droplets, Wrench } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { Wrench, Ruler, Layers, Droplets } from 'lucide-react';
 
-const fallback = [
+const backendBase =
+  import.meta.env.VITE_BACKEND_URL ||
+  `${window.location.protocol}//${window.location.hostname}:8000`;
+
+const staticServices = [
   {
-    icon: Ruler,
     title: 'Проектирование',
-    description: 'Архитектура, гидравлика, подбор оборудования и отделки под задачи и бюджет.',
+    description: 'Инженерные расчёты, подбор оборудования и 3D-визуализация будущего бассейна.',
+    icon: Ruler,
   },
   {
+    title: 'Монтаж и отделка',
+    description: 'Строительство чаши, гидроизоляция, облицовка и пусконаладка под ключ.',
     icon: Layers,
-    title: 'Монтаж',
-    description: 'Строительно-монтажные работы, армирование, гидроизоляция, пусконаладка.',
   },
   {
+    title: 'Оборудование и вода',
+    description: 'Фильтрация, подогрев, автоматизация, аттракционы и интеллектуальное управление.',
     icon: Droplets,
-    title: 'Отделка и оснащение',
-    description: 'Мозаика и ПВХ-мембрана, противотоки, водопады, подсветка, автоматизация.',
   },
   {
+    title: 'Сервис и уход',
+    description: 'Регламентное обслуживание, сезонная консервация и оперативные выезды.',
     icon: Wrench,
-    title: 'Сервис и реконструкция',
-    description: 'Регламентное обслуживание, замена оборудования, модернизация чаши.',
   },
 ];
 
-function getApiBase() {
-  return import.meta.env.VITE_BACKEND_URL || `${window.location.protocol}//${window.location.hostname}:8000`;
-}
-
 export default function Services() {
-  const [items, setItems] = useState(fallback);
-  const [loading, setLoading] = useState(true);
+  const [services, setServices] = useState(staticServices);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    const load = async () => {
+    async function fetchServices() {
       try {
-        const res = await fetch(`${getApiBase()}/api/services`);
-        if (res.ok) {
-          const data = await res.json();
-          if (Array.isArray(data) && data.length) {
-            const mapped = data.map((s, idx) => ({
-              icon: fallback[idx % fallback.length].icon,
-              title: s.title,
-              description: s.description || '',
-            }));
-            setItems(mapped);
-          }
+        const res = await fetch(`${backendBase}/api/services`);
+        if (!res.ok) throw new Error('Failed to fetch services');
+        const data = await res.json();
+        if (Array.isArray(data) && data.length > 0) {
+          setServices(
+            data.map((s) => ({
+              title: s.title || 'Услуга',
+              description: s.description || 'Описание будет добавлено.',
+              icon: Droplets,
+            }))
+          );
         }
       } catch (e) {
-        // ignore, keep fallback
+        // fallback remains static
       } finally {
-        setLoading(false);
+        setLoaded(true);
       }
-    };
-    load();
+    }
+    fetchServices();
   }, []);
 
   return (
-    <section id="services" className="relative py-20">
-      <div className="mx-auto max-w-7xl px-6">
-        <motion.h2
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl"
-        >
-          Наши услуги
-        </motion.h2>
-        <p className="mt-3 max-w-2xl text-slate-600">Полный цикл — от идеи и проекта до ввода в эксплуатацию и постоянного обслуживания.</p>
+    <div className="max-w-7xl mx-auto px-4">
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.6 }}
+        className="text-center"
+      >
+        <h2 className="text-3xl md:text-4xl font-bold">Услуги</h2>
+        <p className="mt-3 text-white/70">Всё для идеального бассейна — от идеи до сервиса.</p>
+      </motion.div>
 
-        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {(loading ? Array.from({ length: 4 }) : items).map((s, i) => (
+      <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {services.map((s, i) => {
+          const Icon = s.icon || Droplets;
+          return (
             <motion.div
-              key={s?.title || i}
+              key={i}
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-              className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:shadow-md"
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.4, delay: i * 0.05 }}
+              className="group rounded-2xl border border-white/10 bg-white/5 p-5 hover:bg-white/10 transition"
             >
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-sky-50 text-sky-600">
-                {loading ? (
-                  <div className="h-6 w-6 animate-pulse rounded bg-sky-200" />
-                ) : (
-                  <s.icon className="h-6 w-6" />
-                )}
+              <div className="flex items-center gap-3">
+                <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-cyan-500/20 text-cyan-300">
+                  <Icon className="h-5 w-5" />
+                </span>
+                <h3 className="font-semibold">{s.title}</h3>
               </div>
-              <h3 className="mt-4 text-lg font-semibold text-slate-900">{loading ? 'Загрузка…' : s.title}</h3>
-              <p className="mt-2 text-sm text-slate-600">{loading ? ' ' : s.description}</p>
+              <p className="mt-3 text-sm text-white/70 leading-relaxed">{s.description}</p>
             </motion.div>
-          ))}
-        </div>
+          );
+        })}
       </div>
-    </section>
+    </div>
   );
 }
