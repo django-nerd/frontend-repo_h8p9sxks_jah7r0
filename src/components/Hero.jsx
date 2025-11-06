@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Spline from '@splinetool/react-spline';
 import { motion } from 'framer-motion';
 import { Waves, PhoneCall, ArrowRight } from 'lucide-react';
@@ -8,15 +8,40 @@ const backendBase =
   `${window.location.protocol}//${window.location.hostname}:8000`;
 
 export default function Hero() {
+  const [canRenderSpline, setCanRenderSpline] = useState(true);
+
+  useEffect(() => {
+    // Graceful fallback if WebGL is unavailable or user prefers reduced motion
+    try {
+      const canvas = document.createElement('canvas');
+      const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+      const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!gl || prefersReduced) {
+        setCanRenderSpline(false);
+      }
+    } catch {
+      setCanRenderSpline(false);
+    }
+  }, []);
+
   return (
-    <div className="relative min-h-[80vh] md:min-h-[90vh] overflow-hidden">
+    <div className="relative min-h-[80vh] md:min-h-[90vh] overflow-hidden bg-gradient-to-b from-slate-900 via-slate-950 to-slate-950">
+      {/* 3D background */}
       <div className="absolute inset-0">
-        <Spline
-          scene="https://prod.spline.design/6il3wWc9lV0eA-6v/scene.splinecode"
-          style={{ width: '100%', height: '100%' }}
-        />
+        {canRenderSpline ? (
+          <Spline
+            scene="https://prod.spline.design/6il3wWc9lV0eA-6v/scene.splinecode"
+            style={{ width: '100%', height: '100%' }}
+            onLoad={() => {
+              // no-op: ensures Spline mounted without blocking UI
+            }}
+          />
+        ) : (
+          <div className="h-full w-full bg-[radial-gradient(1000px_600px_at_70%_-10%,rgba(34,211,238,0.25),transparent),radial-gradient(800px_500px_at_20%_120%,rgba(56,189,248,0.18),transparent)]" />
+        )}
       </div>
 
+      {/* Foreground content */}
       <div className="relative z-10">
         <div className="max-w-7xl mx-auto px-4 pt-24 md:pt-32 pb-20">
           <motion.div
@@ -54,6 +79,7 @@ export default function Hero() {
         </div>
       </div>
 
+      {/* Gradient fade so content is readable over 3D */}
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-slate-950 to-transparent" />
     </div>
   );
