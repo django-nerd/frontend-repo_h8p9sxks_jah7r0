@@ -2,6 +2,7 @@ import Hero from './components/Hero';
 import Services from './components/Services';
 import Projects from './components/Projects';
 import CTA from './components/CTA';
+import { Phone } from 'lucide-react';
 
 function App() {
   return (
@@ -9,7 +10,7 @@ function App() {
       <header className="sticky top-0 z-30 w-full border-b border-slate-200 bg-white/70 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
           <a href="#" className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-lg bg-sky-600" />
+            <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-sky-500 to-cyan-600" />
             <span className="text-lg font-semibold tracking-tight">kupi‑bassein</span>
           </a>
           <nav className="hidden items-center gap-6 md:flex">
@@ -17,7 +18,10 @@ function App() {
             <a href="#projects" className="text-sm text-slate-600 hover:text-slate-900">Проекты</a>
             <a href="#contacts" className="text-sm text-slate-600 hover:text-slate-900">Контакты</a>
           </nav>
-          <a href="tel:+78120000000" className="rounded-lg bg-sky-600 px-3 py-2 text-sm font-medium text-white shadow hover:bg-sky-700">Позвонить</a>
+          <a href="tel:+78120000000" className="inline-flex items-center gap-2 rounded-lg bg-sky-600 px-3 py-2 text-sm font-medium text-white shadow hover:bg-sky-700">
+            <Phone className="h-4 w-4" />
+            Позвонить
+          </a>
         </div>
       </header>
 

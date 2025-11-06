@@ -1,22 +1,43 @@
+import { motion } from 'framer-motion';
 import { PhoneCall } from 'lucide-react';
 
 export default function CTA() {
-  const handleClick = () => {
-    window.location.href = 'tel:+78120000000';
-  };
-
   return (
-    <section className="relative isolate overflow-hidden bg-gradient-to-r from-sky-600 to-cyan-600 py-14">
+    <section className="relative py-20">
+      <div className="absolute inset-0 -z-0 bg-gradient-to-r from-sky-50 via-cyan-50 to-teal-50" />
       <div className="mx-auto max-w-7xl px-6">
-        <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
-          <div>
-            <h3 className="text-2xl font-semibold text-white md:text-3xl">Готовы обсудить ваш бассейн?</h3>
-            <p className="mt-2 text-sky-100">Позвоните — подскажем по стоимости, срокам и оптимальной конструкции.</p>
-          </div>
-          <button onClick={handleClick} className="inline-flex items-center gap-2 rounded-lg bg-white px-5 py-3 font-medium text-sky-700 shadow hover:bg-slate-50">
-            <PhoneCall className="h-5 w-5" />
-            +7 (812) 000-00-00
-          </button>
+        <div className="relative overflow-hidden rounded-3xl border border-sky-100 bg-white p-8 md:p-12">
+          <div className="pointer-events-none absolute -left-20 -top-20 h-64 w-64 rounded-full bg-sky-100 blur-2xl" />
+          <div className="pointer-events-none absolute -bottom-24 -right-10 h-72 w-72 rounded-full bg-cyan-100 blur-2xl" />
+
+          <motion.h2
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl"
+          >
+            Готовы обсудить ваш бассейн?
+          </motion.h2>
+          <p className="mt-3 max-w-2xl text-slate-600">
+            Мы рассчитаем стоимость, предложим оптимальную комплектацию и срок реализации.
+          </p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="mt-8"
+          >
+            <a
+              href="tel:+78120000000"
+              className="inline-flex items-center gap-2 rounded-xl bg-sky-600 px-6 py-3 text-white shadow-lg shadow-sky-600/20 transition hover:bg-sky-700"
+            >
+              <PhoneCall className="h-5 w-5" />
+              Позвонить и получить консультацию
+            </a>
+          </motion.div>
         </div>
       </div>
     </section>

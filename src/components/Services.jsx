@@ -1,47 +1,62 @@
-import { CheckCircle2, Wrench, Ruler, Waves } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Wrench, Ruler, Layers, Droplets } from 'lucide-react';
 
 const services = [
   {
-    icon: <Ruler className="h-6 w-6 text-sky-600" />,
+    icon: Ruler,
     title: 'Проектирование',
-    desc: 'Индивидуальные проекты: бетонные, композитные, каркасные бассейны, SPA‑зоны.'
+    desc: 'Архитектура, гидравлика, подбор оборудования и отделки под задачи и бюджет.',
   },
   {
-    icon: <Wrench className="h-6 w-6 text-sky-600" />,
-    title: 'Монтаж и оборудование',
-    desc: 'Фильтрация, подсветка, накрытия, противоток, подогрев и автоматика.'
+    icon: Layers,
+    title: 'Монтаж',
+    desc: 'Строительно-монтажные работы, армирование, гидроизоляция, пусконаладка.',
   },
   {
-    icon: <Waves className="h-6 w-6 text-sky-600" />,
-    title: 'Отделка и пусконаладка',
-    desc: 'Плитка, пленка ПВХ, мозаика. Пуск, настройка, обучение пользованию.'
+    icon: Droplets,
+    title: 'Отделка и оснащение',
+    desc: 'Мозаика и ПВХ-мембрана, противотоки, водопады, подсветка, автоматизация.',
+  },
+  {
+    icon: Wrench,
+    title: 'Сервис и реконструкция',
+    desc: 'Регламентное обслуживание, замена оборудования, модернизация чаши.',
   },
 ];
 
 export default function Services() {
   return (
-    <section id="services" className="bg-white py-16 md:py-20">
+    <section id="services" className="relative py-20">
       <div className="mx-auto max-w-7xl px-6">
-        <div className="mb-10 flex items-end justify-between">
-          <div>
-            <h2 className="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">Наши услуги</h2>
-            <p className="mt-2 text-slate-600">Полный цикл работ — от идеи до обслуживания.</p>
-          </div>
-          <div className="hidden gap-2 md:flex">
-            <div className="inline-flex items-center gap-2 rounded-full border border-sky-200 bg-sky-50 px-3 py-1 text-sm text-sky-700">
-              <CheckCircle2 className="h-4 w-4" /> Сертифицированные специалисты
-            </div>
-          </div>
-        </div>
-        <div className="grid gap-6 md:grid-cols-3">
-          {services.map((s) => (
-            <div key={s.title} className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:shadow-lg">
-              <div className="mb-4 flex items-center gap-3">
-                {s.icon}
-                <h3 className="text-xl font-semibold text-slate-900">{s.title}</h3>
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-3xl font-bold tracking-tight text-slate-900 md:text-4xl"
+        >
+          Наши услуги
+        </motion.h2>
+        <p className="mt-3 max-w-2xl text-slate-600">
+          Полный цикл — от идеи и проекта до ввода в эксплуатацию и постоянного обслуживания.
+        </p>
+
+        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {services.map(({ icon: Icon, title, desc }) => (
+            <motion.div
+              key={title}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:shadow-md"
+            >
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-sky-50 text-sky-600">
+                <Icon className="h-6 w-6" />
               </div>
-              <p className="text-slate-600">{s.desc}</p>
-            </div>
+              <h3 className="mt-4 text-lg font-semibold text-slate-900">{title}</h3>
+              <p className="mt-2 text-sm text-slate-600">{desc}</p>
+            </motion.div>
           ))}
         </div>
       </div>
